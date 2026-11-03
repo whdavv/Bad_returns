@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Bad Returns</title>
+  <style>
+    :root {
+      --bg: #eef2f7;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --border: #d8dee8;
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --success: #16a34a;
+      --success-hover: #15803d;
+      --danger: #dc2626;
+      --danger-hover: #b91c1c;
+      --soft: #f8fafc;
+      --shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+      --radius: 16px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(180deg, #f3f5f9 0%, #e9eef5 100%);
+      color: var(--text);
+      padding: 24px;
+    }
+
+    .top-link {
+      position: fixed;
+      top: 18px;
+      right: 18px;
+      z-index: 10;
+      text-decoration: none;
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: white;
+      padding: 11px 16px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 14px;
+      box-shadow: 0 8px 24px rgba(37, 99, 235, 0.28);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .top-link:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 26px rgba(37, 99, 235, 0.34);
+    }
+
+    .wrap {
+      max-width: 940px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      text-align: center;
+      margin: 0 0 18px;
+      font-size: 38px;
+      line-height: 1.1;
+      color: #111827;
+      letter-spacing: -0.02em;
+    }
+
+    .sub {
+      text-align: center;
+      color: var(--muted);
+      margin-bottom: 24px;
+      font-size: 14px;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 24px;
+      border: 1px solid rgba(216, 222, 232, 0.75);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .full {
+      grid-column: 1 / -1;
+    }
+
+    .field label,
+    .section-title {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: #111827;
+    }
+
+    input[type="text"],
+    textarea,
+    select {
+      width: 100%;
+      border: 1px solid var(--border);
+      background: var(--soft);
+      border-radius: 12px;
+      padding: 12px 13px;
+      font-size: 14px;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+    }
+
+    input[type="text"]:focus,
+    textarea:focus,
+    select:focus {
+      border-color: #93c5fd;
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+      background: #fff;
+    }
+
+    textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .section {
+      margin-top: 18px;
+      padding-top: 18px;
+      border-top: 1px solid #edf2f7;
+    }
+
+    .options {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px 14px;
+    }
+
+    .option-card {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #f8fafc;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 11px 12px;
+      min-height: 48px;
+    }
+
+    .option-card input {
+      margin: 0;
+      transform: scale(1.05);
+    }
+
+    .option-card label {
+      margin: 0;
+      font-size: 14px;
+      font-weight: 600;
+      color: #1f2937;
+      cursor: pointer;
+    }
+
+    .status-grid {
+      display: grid;
+      grid-template-columns: repeat(2, (0, 1fr));
+      gap: 14px;
+      margin-top: 12px;
+    }
+
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 22px;
+    }
+
+    button {
+      border: none;
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-size: 14px;
+      font-weight: 700;
+      color: white;
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      filter: brightness(0.98);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+      box-shadow: 0 8px 18px rgba(37, 99, 235, 0.22);
+    }
+
+    .btn-success {
+      background: linear-gradient(135deg, var(--success), var(--success-hover));
+      box-shadow: 0 8px 18px rgba(22, 163, 74, 0.22);
+    }
+
+    .btn-danger {
+      background: linear-gradient(135deg, var(--danger), var(--danger-hover));
+      box-shadow: 0 8px 18px rgba(220, 38, 38, 0.18);
+    }
+
+    .btn-secondary {
+      background: linear-gradient(135deg, #64748b, #475569);
+      box-shadow: 0 8px 18px rgba(100, 116, 139, 0.18);
+    }
+
+    .hint {
+      margin-top: 8px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .footer-note {
+      margin-top: 10px;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    @media (max-width: 780px) {
+      body { padding: 16px; }
+      .grid,
+      .status-grid,
+      .options {
+        grid-template-columns: 1fr;
+      }
+      h1 { font-size: 30px; }
+      .top-link {
+        position: static;
+        display: inline-block;
+        margin-bottom: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <a href="https://lossprevention.amazon.com/redphone_cases" target="_blank" class="top-link">RedPhone Cases</a>
+
+    <h1>Bad Returns</h1>
+    
+
+    <div class="card">
+      <div class="grid">
+        <div class="field full">
+          <label for="itemName">Item Name</label>
+          <input type="text" id="itemName" placeholder="Enter item name" />
+        </div>
+
+        <div class="field">
+          <label for="lpn">LPN</label>
+          <input type="text" id="lpn" placeholder="Enter LPN" />
+        </div>
+
+        <div class="field">
+          <label for="asin">ASIN</label>
+          <input type="text" id="asin" placeholder="Enter ASIN" />
+        </div>
+
+        <div class="field">
+          <label for="price">Price</label>
+          <input type="text" id="price" placeholder="Enter price" />
+        </div>
+		<div class="field">
+          <label for="customerComment">Customer Comment</label>
+          <input type="text" id="customerComment" placeholder="Enter customer comment" />
+        </div>
+      </div>
+<br>
+        <div class="field">
+  <label for="orderInitiated">Order Initiated</label>
+  <input type="text" id="orderInitiated">
+</div>
+<br>
+<div class="field">
+  <label for="returnInitiated">Return Initiated</label>
+  <input type="text" id="returnInitiated">
+</div>
+
+        
+
+      <div class="section">
+        <div class="section-title">Bad Return Type</div>
+        <div class="options">
+          <div class="option-card">
+            <input type="radio" name="issue" id="beyondUse" />
+            <label for="beyondUse">Beyond Acceptable Use</label>
+          </div>
+          <div class="option-card">
+            <input type="radio" name="issue" id="counterfeit" />
+            <label for="counterfeit">Counterfeit</label>
+          </div>
+          <div class="option-card">
+            <input type="radio" name="issue" id="junkBox" />
+            <label for="junkBox">Junk in the Box</label>
+          </div>
+          <div class="option-card">
+            <input type="radio" name="issue" id="emptyBox" />
+            <label for="emptyBox">Empty Box</label>
+          </div>
+          <div class="option-card">
+            <input type="radio" name="issue" id="manipulatedLabel" />
+            <label for="manipulatedLabel">Manipulated Label</label>
+          </div>
+          <div class="option-card">
+            <input type="radio" name="issue" id="differentUnit" />
+            <label for="differentUnit">Different Unit</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Case Status</div>
+        <div class="status-grid">
+          <div class="field">
+            <label for="badHistoryOption">Bad History?</label>
+            <select id="badHistoryOption">
+              <option value="">Select</option>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="refundOption">Received Refund?</label>
+            <select id="refundOption">
+              <option value="">Select</option>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
+            </select>
+          </div>
+		  <div class="field">
+  <label>
+    <input type="checkbox" id="receivedExchange">
+    Received Exchange
+  </label>
+</div>
+
+          <div class="field">
+            <label for="blueCageOption">Placed in Blue Cage for LP?</label>
+            <select id="blueCageOption">
+              <option value="">Select</option>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="buttons">
+        <button class="btn-primary" type="button" onclick="generateMessage()">Update</button>
+        <button class="btn-success" id="copyButton" type="button" onclick="copyToClipboard()">Copy</button>
+        <button class="btn-danger" type="button" onclick="clearFields()">Clear</button>
+      </div>
+
+      <div class="field full" style="margin-top:20px;">
+        <label for="generatedText">Generated Text</label>
+        <textarea id="generatedText" placeholder="Generated case text will appear here"></textarea>
+        
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function f(id) {
+      return (document.getElementById(id)?.value || "").trim();
+    }
+
+    function selectedIssueId() {
+      return document.querySelector('input[name="issue"]:checked')?.id || "";
+    }
+
+    function getIssueTextForMessage() {
+      const issueMap = {
+        beyondUse: "Customer returned the item in beyond acceptable use condition.",
+        counterfeit: "Customer returned a counterfeit item.",
+        junkBox: "Customer returned junk items in the box.",
+        emptyBox: "Customer returned an empty box.",
+        manipulatedLabel: "Label on the item was manipulated.",
+        differentUnit: "Customer returned a different unit."
+      };
+      return issueMap[selectedIssueId()] || "";
+    }
+
+    function cleanPrice(value) {
+      return value.replace(/\$/g, "").trim();
+    }
+
+    
+    function identifierPrefix() {
+      const lpn = f("lpn");
+      const asin = f("asin");
+      if (lpn) return lpn;
+      if (asin) return asin;
+      return "Case";
+    }
+
+    function generateMessage() {
+      const itemName = f("itemName");
+      const asin = f("asin");
+      const lpn = f("lpn");
+      const price = cleanPrice(f("price"));
+      const orderInitiated = f("orderInitiated");
+      const returnInitiated = f("returnInitiated");
+      const customerComment = f("customerComment");
+      const badHistory = f("badHistoryOption");
+      const refund = f("refundOption");
+      const blueCage = f("blueCageOption");
+      const issueText = getIssueTextForMessage();
+
+      let msg = `${identifierPrefix()}: Customer ordered ${itemName || "the item"}`;
+
+      if (asin) {
+        msg += ` [${asin}]`;
+      }
+
+      if (price) {
+        msg += ` priced at $${price}`;
+      }
+	  
+
+      if (orderInitiated) {
+        msg += ` on ${orderInitiated}`;
+      }
+
+      if (returnInitiated) {
+        msg += ` and started the return on ${returnInitiated}`;
+      }
+
+      msg += ".";
+
+      if (customerComment) {
+        msg += ` Customer comment: ${customerComment}.`;
+      }
+
+      if (issueText) {
+        msg += ` ${issueText}`;
+      }
+
+      if (badHistory === "Yes") {
+        msg += " Customer has a bad return history.";
+      } else if (badHistory === "No") {
+        msg += " Customer does not have extensive return history.";
+      }
+
+      if (refund === "Yes") {
+        msg += " Customer has received a refund.";
+      } else if (refund === "No") {
+        msg += " Customer has NOT received a refund.";
+      }
+	  
+	  if (document.getElementById("receivedExchange").checked){
+		msg += " Customer received an exchange.";
+	  }
+
+      if (blueCage === "Yes") {
+        msg += " Item will be placed in the Blue Cage for LP investigation.";
+      } else if (blueCage === "No") {
+        msg += " Item will NOT be placed in the Blue Cage for LP.";
+      }
+
+      document.getElementById("generatedText").value = msg.trim();
+    }
+
+    function copyToClipboard() {
+      const text = document.getElementById("generatedText").value;
+      if (!text) return;
+
+      navigator.clipboard.writeText(text).then(() => {
+        const btn = document.getElementById("copyButton");
+        const original = btn.innerText;
+        btn.innerText = "Copied!";
+        setTimeout(() => btn.innerText = original, 1400);
+      });
+    }
+
+    function clearFields() {
+      document.querySelectorAll('input[type="text"]').forEach(el => el.value = "");
+      document.querySelectorAll('input[type="radio"]').forEach(el => el.checked = false);
+      document.querySelectorAll('select').forEach(el => el.value = "");
+      document.getElementById("generatedText").value = "";
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    
+    document.addEventListener("keydown", function (e) {
+      const tag = document.activeElement?.tagName?.toLowerCase();
+      if (e.key === "Enter" && tag !== "textarea") {
+        e.preventDefault();
+        generateMessage();
+      }
+    });
+  </script>
+</body>
+</html>
